@@ -1,11 +1,11 @@
 var ctx = undefined;
 var mousePos = {x : 9999, y : 9999};
 var mouseDown = false;
-var brushSize = 1;
+var brushSize = 5;
 var brushColor = {
-	r : 0,
-	g : 0,
-	b : 0,
+	r : 255,
+	g : 255,
+	b : 255,
 	fill: "#ffffff"
 };
 
