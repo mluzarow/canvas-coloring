@@ -3,11 +3,30 @@
 	<meta charset = "UTF-8">
 	<script type = "text/javascript" src = "src/g.js"></script>
 	<title>a</title>
+	<style>
+		.control_junk {
+			display: inline-block;
+			vertical-align: top;
+		}
+		
+		#rgb_result {
+			width: 20px;
+			height: 20px;
+		}
+	</style>
 </head>
 <body>
 	<canvas id="canvas" width=500 height=500></canvas>
-	<button id="clear">Clear canvas</button>
-	<label>Brush Size: </label>
-	<input type="number" id="brush_size" min=1 max=25 autocomplete="off" value=1 />
+	<div class="control_junk">
+		<button id="clear">Clear canvas</button>
+		<label>Brush Size: </label>
+		<input type="number" id="brush_size" min=1 max=25 autocomplete="off" value=5 />
+		<div id="rbg_sliders">
+			<label for="rgb_r">Red: </label><input type="range" id="rgb_r" min=0 max=255 autocomplete="off" value=0 />
+			<label for="rgb_g">Green: </label><input type="range" id="rgb_g" min=0 max=255 autocomplete="off" value=0 />
+			<label for="rgb_b">Blue: </label><input type="range" id="rgb_b" min=0 max=255 autocomplete="off" value=0 />
+			<div id="rgb_result"></div>
+		</div>
+	</div>
 </body>
 </html>

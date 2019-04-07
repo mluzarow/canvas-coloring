@@ -2,6 +2,12 @@ var ctx = undefined;
 var mousePos = {x : 9999, y : 9999};
 var mouseDown = false;
 var brushSize = 1;
+var brushColor = {
+	r : 0,
+	g : 0,
+	b : 0,
+	fill: "#ffffff"
+};
 
 window.onload = () => {
 	ctx = document.getElementById ("canvas").getContext ("2d");
@@ -13,9 +19,34 @@ window.onload = () => {
 	document.addEventListener ("mousemove", mousePosUpdate);
 	document.addEventListener ("mousedown", () => mouseDown = true);
 	document.addEventListener ("mouseup", () => mouseDown = false);
+	document.getElementById ("rgb_r").addEventListener ("change", (e) => updateBrushColor ('r', parseInt (e.target.value)));
+	document.getElementById ("rgb_g").addEventListener ("change", (e) => updateBrushColor ('g', parseInt (e.target.value)));
+	document.getElementById ("rgb_b").addEventListener ("change", (e) => updateBrushColor ('b', parseInt (e.target.value)));
 	
 	requestAnimationFrame (eventLoop);
 };
+
+function updateBrushColor (type, val) {
+	switch (type) {
+		case 'r': brushColor.r = val; break;
+		case 'g': brushColor.g = val; break;
+		case 'b': brushColor.b = val;
+	}
+	
+	let rgb = [
+		brushColor.r.toString (16),
+		brushColor.g.toString (16),
+		brushColor.b.toString (16)
+	];
+	console.log (rgb);
+	let rgbh = rgb.map (v => {while (v.length < 2) v = '0' + v; return v;});
+	
+	brushColor.fill = `#${rgbh[0]}${rgbh[1]}${rgbh[2]}`;
+	
+	document.getElementById ("rgb_result").style.backgroundColor = brushColor.fill;
+	
+	ctx.fillStyle = brushColor.fill;
+}
 
 function mousePosUpdate (e) {
 	mousePos = {
@@ -35,5 +66,5 @@ function eventLoop () {
 function clearCanvas () {
 	ctx.fillStyle = "#000";
 	ctx.fillRect (0, 0, 500, 500);
-	ctx.fillStyle = "#fff";
+	ctx.fillStyle = brushColor.fill;
 }
