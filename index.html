@@ -13,14 +13,29 @@
 			width: 20px;
 			height: 20px;
 		}
+		
+		#tool_type h3 {
+			margin: 0;
+			display: inline-block;
+		}
 	</style>
 </head>
 <body>
 	<canvas id="canvas" width=500 height=500></canvas>
 	<div class="control_junk">
 		<button id="clear">Clear canvas</button>
-		<label>Brush Size: </label>
-		<input type="number" id="brush_size" min=1 max=25 autocomplete="off" value=5 />
+		<div id="tool_type">
+			<div class="tool">
+				<input type="radio" id="tool_brush" name="tool_choice" checked autocomplete="off" />
+				<h3>Brush</h3>
+				<label>Brush Size: </label>
+				<input type="number" id="brush_size" min=1 max=25 autocomplete="off" value=5 />
+			</div>
+			<div class="tool">
+				<input type="radio" id="tool_paintcan" name="tool_choice" autocomplete="off" />
+				<h3>Paintcan</h3>
+			</div>
+		</div>
 		<div id="rbg_sliders">
 			<label for="rgb_r">Red: </label><input type="range" id="rgb_r" min=0 max=255 autocomplete="off" value=255 />
 			<label for="rgb_g">Green: </label><input type="range" id="rgb_g" min=0 max=255 autocomplete="off" value=255 />
