@@ -49,66 +49,197 @@ function fill (mousePos) {
 	
 	let oPos = mousePos.y * 2000 + mousePos.x * 4;
 	
-	let originColor = [
-		pixelData[oPos],
-		pixelData[oPos + 1],
-		pixelData[oPos + 2],
+	let clickedPixel = {
+		dataPosition: oPos,
+		gridPosition: {
+			x: mousePos.x,
+			y: mousePos.y
+		},
+		pixelColor: {
+			r: pixelData[oPos],
+			g: pixelData[oPos + 1],
+			b: pixelData[oPos + 2]
+		}
+	};
+	
+	let fillColor = {
+		r: brushColor.r,
+		g: brushColor.g,
+		b: brushColor.b
+	};
+	
+	let expandOrigins = [
+		clickedPixel
 	];
 	
-	imageData.data = fillHelper (mousePos, originColor, pixelData);
+	do {
+		let newExpandOrigins = [];
+		
+		for (let i = 0; i < expandOrigins.length; i++) {
+			// For each expandable origin pixel, check around each of its four
+			// corners. If there is a spot that is not the original fill color
+			// AND the same color as the clicked pixel color, fill it with the
+			// fill color and add that filled pixel to a new expandable origins
+			// list that will replace the current expandable origins list on next
+			// iteration of outside while loop.
+			
+			// Up
+			if (expandOrigins[i].gridPosition.y > 0) {
+				// If grid position is more than 0, we are NOT on the top row
+				// so we can go up further
+				
+				let currentPixel = {
+					dataPosition: expandOrigins[i].dataPosition - (500 * 4),
+					gridPosition: {
+						x: expandOrigins[i].gridPosition.x,
+						y: expandOrigins[i].gridPosition.y - 1
+					},
+					pixelColor: {}
+				};
+				
+				currentPixel.pixelColor = {
+					r: pixelData[currentPixel.dataPosition],
+					g: pixelData[currentPixel.dataPosition + 1],
+					b: pixelData[currentPixel.dataPosition + 2],
+				};
+				
+				if (
+					currentPixel.pixelColor.r === clickedPixel.pixelColor.r &&
+					currentPixel.pixelColor.g === clickedPixel.pixelColor.g &&
+					currentPixel.pixelColor.b === clickedPixel.pixelColor.b
+				) {
+					// Pixel is a fillable color
+					currentPixel.pixelColor = fillColor;
+					
+					// Update pixel to fill color
+					pixelData[currentPixel.dataPosition] = fillColor.r;
+					pixelData[currentPixel.dataPosition + 1] = fillColor.g;
+					pixelData[currentPixel.dataPosition + 2] = fillColor.b;
+					
+					// Add to processing list
+					newExpandOrigins.push (currentPixel);
+				}
+			}
+			
+			// Down
+			if (expandOrigins[i].gridPosition.y < 499) {
+				// If grid position is less than 499, we are NOT on the bottom
+				// row so we can go down further
+				
+				let currentPixel = {
+					dataPosition: expandOrigins[i].dataPosition + (500 * 4),
+					gridPosition: {
+						x: expandOrigins[i].gridPosition.x,
+						y: expandOrigins[i].gridPosition.y + 1
+					},
+					pixelColor: {}
+				};
+				
+				currentPixel.pixelColor = {
+					r: pixelData[currentPixel.dataPosition],
+					g: pixelData[currentPixel.dataPosition + 1],
+					b: pixelData[currentPixel.dataPosition + 2],
+				};
+				
+				if (
+					currentPixel.pixelColor.r === clickedPixel.pixelColor.r &&
+					currentPixel.pixelColor.g === clickedPixel.pixelColor.g &&
+					currentPixel.pixelColor.b === clickedPixel.pixelColor.b
+				) {
+					// Pixel is a fillable color
+					currentPixel.pixelColor = fillColor;
+					
+					// Update pixel to fill color
+					pixelData[currentPixel.dataPosition] = fillColor.r;
+					pixelData[currentPixel.dataPosition + 1] = fillColor.g;
+					pixelData[currentPixel.dataPosition + 2] = fillColor.b;
+					
+					// Add to processing list
+					newExpandOrigins.push (currentPixel);
+				}
+			}
+			
+			// Left
+			if (expandOrigins[i].gridPosition.x > 0) {
+				// If grid position is more than 0, we are NOT on the leftmost
+				// column so we can go left further
+				
+				let currentPixel = {
+					dataPosition: expandOrigins[i].dataPosition - 4,
+					gridPosition: {
+						x: expandOrigins[i].gridPosition.x - 1,
+						y: expandOrigins[i].gridPosition.y
+					},
+					pixelColor: {}
+				};
+				
+				currentPixel.pixelColor = {
+					r: pixelData[currentPixel.dataPosition],
+					g: pixelData[currentPixel.dataPosition + 1],
+					b: pixelData[currentPixel.dataPosition + 2],
+				};
+				
+				if (
+					currentPixel.pixelColor.r === clickedPixel.pixelColor.r &&
+					currentPixel.pixelColor.g === clickedPixel.pixelColor.g &&
+					currentPixel.pixelColor.b === clickedPixel.pixelColor.b
+				) {
+					// Pixel is a fillable color
+					currentPixel.pixelColor = fillColor;
+					
+					// Update pixel to fill color
+					pixelData[currentPixel.dataPosition] = fillColor.r;
+					pixelData[currentPixel.dataPosition + 1] = fillColor.g;
+					pixelData[currentPixel.dataPosition + 2] = fillColor.b;
+					
+					// Add to processing list
+					newExpandOrigins.push (currentPixel);
+				}
+			}
+			
+			// Right
+			if (expandOrigins[i].gridPosition.x < 499) {
+				// If grid position is less than 499, we are NOT on the rightmost
+				// column so we can go right further
+				
+				let currentPixel = {
+					dataPosition: expandOrigins[i].dataPosition + 4,
+					gridPosition: {
+						x: expandOrigins[i].gridPosition.x + 1,
+						y: expandOrigins[i].gridPosition.y
+					},
+					pixelColor: {}
+				};
+				
+				currentPixel.pixelColor = {
+					r: pixelData[currentPixel.dataPosition],
+					g: pixelData[currentPixel.dataPosition + 1],
+					b: pixelData[currentPixel.dataPosition + 2],
+				};
+				
+				if (
+					currentPixel.pixelColor.r === clickedPixel.pixelColor.r &&
+					currentPixel.pixelColor.g === clickedPixel.pixelColor.g &&
+					currentPixel.pixelColor.b === clickedPixel.pixelColor.b
+				) {
+					// Pixel is a fillable color
+					currentPixel.pixelColor = fillColor;
+					
+					// Update pixel to fill color
+					pixelData[currentPixel.dataPosition] = fillColor.r;
+					pixelData[currentPixel.dataPosition + 1] = fillColor.g;
+					pixelData[currentPixel.dataPosition + 2] = fillColor.b;
+					
+					// Add to processing list
+					newExpandOrigins.push (currentPixel);
+				}
+			}
+		}
+		
+		expandOrigins = newExpandOrigins.map (x => x);
+	} while (expandOrigins.length > 0);
 	
 	ctx.putImageData (imageData, 0, 0);
-}
-
-/**
- * Recursive fill helper.
- * 
- * @this canvas pixel data
- * 
- * @param {Object} pixel       x,y coordinate of current pixel to be worked on.
- *                             This is the pixel position and not the position
- *                             inside the pixel data array.
- * @param {String}            originColor color of the pixel originally clicked
- * @param {Uint8ClampedArray} pixelData   canvas pixel data
- */
-function fillHelper (pixel, originColor, pixelData) {
-	if (pixel.x < 0 || pixel.x >= 500 || pixel.y < 0 || pixel.y >= 500) {
-		// Out of bounds pixel
-		return pixelData;
-	}
-	
-	let realPos = pixel.y * 2000 + pixel.x * 4;
-	
-	let hex = rgbToHex (
-		pixelData[realPos],
-		pixelData[realPos + 1],
-		pixelData[realPos + 2]
-	);
-	
-	if (hex !== originColor) {
-		// Current pixel is not the same color as the original color that was
-		// clicked with the fill tool, so skip it
-		return pixelData;
-	}
-	
-	if (hex === brushColor.fill) {
-		// Current pixel is the same color as the fill color, so skip it
-		return pixelData;
-	}
-	
-	// Change color of current pixel to the fill color
-	pixelData[realPos] = brushColor.r;
-	pixelData[realPos + 1] = brushColor.g;
-	pixelData[realPos + 2] = brushColor.b;
-	
-	// Look at immediate four sides and check for any pixels that are not the
-	// fill color or the original pixel color
-	pixelData = fillHelper ({x: pixel.x, y: pixel.y + 1}, originColor, pixelData); // Up
-	pixelData = fillHelper ({x: pixel.x, y: pixel.y - 1}, originColor, pixelData); // Down
-	pixelData = fillHelper ({x: pixel.x + 1, y: pixel.y}, originColor, pixelData); // Right
-	pixelData = fillHelper ({x: pixel.x - 1, y: pixel.y}, originColor, pixelData); // Left
-	
-	return pixelData;
 }
 
 function rgbToHex (r, g, b) {
