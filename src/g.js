@@ -68,6 +68,16 @@ function fill (mousePos) {
 		b: brushColor.b
 	};
 	
+	if (
+		clickedPixel.pixelColor.r === fillColor.r &&
+		clickedPixel.pixelColor.g === fillColor.g &&
+		clickedPixel.pixelColor.b === fillColor.b
+	) {
+		// Don't bother if the clicked pixel and the fill color are the same
+		// since it's already technically filled
+		return;
+	}
+	
 	let expandOrigins = [
 		clickedPixel
 	];
@@ -280,7 +290,7 @@ function mousePosUpdate (e) {
 }
 
 function eventLoop () {
-	if (mouseDown && mousePos.x <= 500 && mousePos.y <= 500) {
+	if (mouseDown === true && mousePos.x <= 500 && mousePos.y <= 500) {
 		if (toolContext === tools.brush) {
 			ctx.fillRect (mousePos.x, mousePos.y, brushSize, brushSize);
 		} else if (toolContext === tools.paintcan && working === false) {
