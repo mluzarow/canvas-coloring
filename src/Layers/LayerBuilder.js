@@ -26,4 +26,12 @@ class LayerBuilder {
 		
 		return layer;
 	}
+	
+	buildLayer (layerID, canvasHeight, canvasWidth, name="", pixelData=[]) {
+		return new Layer (
+			layerID,
+			pixelData.length < 1 ? [].fill (0, 0, canvasHeight * canvasWidth * 4) : pixelData,
+			name.length < 1 ? `Layer ${layerID}` : name
+		);
+	}
 }

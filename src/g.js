@@ -20,13 +20,20 @@ var toolContext = tools.brush;
 
 var working = false;
 
-var layerManager = new LayerManager (new LayerBuilder ());
+var layerManager = undefined;
 
 window.onload = () => {
 	$canvas = document.getElementById ("canvas");
 	ctx = $canvas.getContext ("2d");
 	
 	clearCanvas ();
+	
+	layerManager = new LayerManager (
+		new LayerBuilder (),
+		ctx.getImageData(0, 0, $canvas.width, $canvas.height),
+		$canvas.height,
+		$canvas.width
+	);
 	
 	document.getElementById ("clear").addEventListener ("click", clearCanvas);
 	document.getElementById ("brush_size").addEventListener ("change", e => brushSize = parseInt (e.target.value))
@@ -43,8 +50,6 @@ window.onload = () => {
 	document.querySelectorAll ("#color_saver .color_box").forEach (
 		v => v.addEventListener ("click", e => updateSavedColor (e))
 	);
-	
-	layerManager.newLayer (ctx.getImageData (0, 0, 500, 500));
 	
 	requestAnimationFrame (eventLoop);
 };

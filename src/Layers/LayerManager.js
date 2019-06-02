@@ -1,18 +1,20 @@
 class LayerManager {
-	constructor (layerBuilder) {
-		this.builder = layerBuilder;
+	constructor (builder, pixelData, pixelHeight, pixelWidth) {
+		this.builder = builder;
 		
-		this.currentID = 1;
-		this.layers = [];
-		this.layersCount = 0;
+		this.currentID = 2;
+		this.layers = [
+			this.builder.buildLayer (1, pixelHeight, pixelWidth, "Base Layer", pixelData)
+		];
+		this.layersCount = 1;
 		this.layersHTML = document.getElementById ("layers");
 	}
 	
-	newLayer (imgData) {
-		let newLayer = new Layer (
+	newLayer (canvasHeight, canvasWidth) {
+		let newLayer = this.builder.buildLayer (
 			++this.currentID,
-			imgData,
-			`Layer ${this.currentID}`
+			canvasHeight,
+			canvasWidth
 		);
 		
 		this.layersCount++;
