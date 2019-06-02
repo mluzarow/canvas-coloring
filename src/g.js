@@ -18,6 +18,8 @@ var toolContext = tools.brush;
 
 var working = false;
 
+var layerManager = new LayerManager (new LayerBuilder ());
+
 window.onload = () => {
 	ctx = document.getElementById ("canvas").getContext ("2d");
 	
@@ -33,6 +35,8 @@ window.onload = () => {
 	document.getElementById ("rgb_b").addEventListener ("change", e => updateBrushColor ('b', parseInt (e.target.value)));
 	document.getElementById ("tool_brush").addEventListener ("click", () => toolContext = tools.brush);
 	document.getElementById ("tool_paintcan").addEventListener ("click", () => toolContext = tools.paintcan);
+	
+	layerManager.newLayer (ctx.getImageData (0, 0, 500, 500));
 	
 	requestAnimationFrame (eventLoop);
 };

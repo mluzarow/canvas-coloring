@@ -1,7 +1,9 @@
 <html>
 <head>
 	<meta charset = "UTF-8">
-	<script type = "text/javascript" src = "src/g.js"></script>
+	<script type = "text/javascript" src = "src/Layers/Layer.js"></script>
+	<script type = "text/javascript" src = "src/Layers/LayerBuilder.js"></script>
+	<script type = "text/javascript" src = "src/Layers/LayerManager.js"></script>
 	<title>a</title>
 	<style>
 		.control_junk {
@@ -17,6 +19,50 @@
 		#tool_type h3 {
 			margin: 0;
 			display: inline-block;
+		}
+		
+		#layers {
+			width: 200px;
+		}
+		
+		.layer {
+			position: relative;
+			margin: 5px 0;
+			padding: 5px 5px 5px 8px;
+			background-color: #cdcdcd;
+			cursor: grab;
+		}
+		
+		.layer.dragging {
+			cursor: grabbing;
+		}
+		
+		.layer.active .active_bar {
+			display: block;
+		}
+		
+		.layer .active_bar {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			width: 3px;
+			display: none;
+			background-color: green;
+		}
+		
+		.layer .btn_delete {
+			position: absolute;
+			top: 0;
+			right: 0;
+			padding: 5px;
+			cursor: pointer;
+			font-family: Arial;
+			font-weight: 700;
+		}
+		
+		.layer .btn_delete:hover {
+			background-color: red;
 		}
 	</style>
 </head>
@@ -42,6 +88,15 @@
 			<label for="rgb_b">Blue: </label><input type="range" id="rgb_b" min=0 max=255 autocomplete="off" value=255 />
 			<div id="rgb_result"></div>
 		</div>
+		<div id="layers">
+			<h3>Layers</h3>
+			<div class="layer active" data-layer_id=1>
+				<div class="active_bar"></div>
+				<div class="btn_delete">X</div>
+				<span class="name">Base</span>
+			</div>
+		</div>
 	</div>
 </body>
 </html>
+<script type = "text/javascript" src = "src/g.js"></script>
