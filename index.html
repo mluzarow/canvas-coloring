@@ -21,6 +21,24 @@
 			display: inline-block;
 		}
 		
+		#color_saver .color_boxes {
+			display: grid;
+			grid-template-columns: repeat(10, 40px);
+		}
+		
+		#color_saver .color_boxes .color_box {
+			width: 38px;
+			height: 38px;
+			border: 1px solid #000;
+			cursor: pointer;
+		}
+		
+		#color_saver .color_boxes .color_box.empty::before {
+			padding-left: 13px;
+			content: '?';
+			font-size: 30px;
+		}
+		
 		#layers {
 			width: 200px;
 		}
@@ -81,12 +99,44 @@
 				<input type="radio" id="tool_paintcan" name="tool_choice" autocomplete="off" />
 				<h3>Paintcan</h3>
 			</div>
+			<div class="tool">
+				<input type="radio" id="tool_eyedropper" name="tool_choice" autocomplete="off" />
+				<h3>Eyedropper</h3>
+			</div>
 		</div>
 		<div id="rbg_sliders">
 			<label for="rgb_r">Red: </label><input type="range" id="rgb_r" min=0 max=255 autocomplete="off" value=255 />
 			<label for="rgb_g">Green: </label><input type="range" id="rgb_g" min=0 max=255 autocomplete="off" value=255 />
 			<label for="rgb_b">Blue: </label><input type="range" id="rgb_b" min=0 max=255 autocomplete="off" value=255 />
 			<div id="rgb_result"></div>
+		</div>
+		<div id="color_saver">
+			<p>
+				Save your colors here! Click on a filled square to use that color.
+				Click on an empty square to save your current color.
+			</p>
+			<div class="color_boxes">
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+				<div class="color_box empty"></div>
+			</div>
 		</div>
 		<div id="layers">
 			<h3>Layers</h3>

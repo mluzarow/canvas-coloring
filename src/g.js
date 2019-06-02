@@ -12,7 +12,8 @@ var brushColor = {
 
 var tools = {
 	brush: 0,
-	paintcan: 1
+	paintcan: 1,
+	eyedropper: 2
 };
 
 var toolContext = tools.brush;
@@ -37,11 +38,36 @@ window.onload = () => {
 	document.getElementById ("rgb_b").addEventListener ("change", e => updateBrushColor ('b', parseInt (e.target.value)));
 	document.getElementById ("tool_brush").addEventListener ("click", () => toolContext = tools.brush);
 	document.getElementById ("tool_paintcan").addEventListener ("click", () => toolContext = tools.paintcan);
+	document.getElementById ("tool_eyedropper").addEventListener ("click", () => toolContext = tools.eyedropper);
+	
+	document.querySelectorAll ("#color_saver .color_box").forEach (
+		v => v.addEventListener ("click", e => updateSavedColor (e))
+	);
 	
 	layerManager.newLayer (ctx.getImageData (0, 0, 500, 500));
 	
 	requestAnimationFrame (eventLoop);
 };
+
+function updateSavedColor (e) {
+	let $block = e.target;
+	
+	if ($block.classList.contains ("empty")) {
+		$block.classList = "color_box";
+		$block.style.backgroundColor = brushColor.fill;
+		$block.dataset.hex_ref = brushColor.fill;
+	} else {
+		brushColor.fill = $block.dataset.hex_ref;
+		ctx.fillStyle = brushColor.fill;
+		brushColor.r = parseInt (brushColor.fill.substr(1, 2), 16);
+		brushColor.g = parseInt (brushColor.fill.substr(3, 2), 16);
+		brushColor.b = parseInt (brushColor.fill.substr(5, 2), 16);
+		document.getElementById ("rgb_r").value = brushColor.r;
+		document.getElementById ("rgb_g").value = brushColor.g;
+		document.getElementById ("rgb_b").value = brushColor.b;
+		document.getElementById ("rgb_result").style.backgroundColor = brushColor.fill;
+	}
+}
 
 /**
  * Fills currently selected color over all pixels with the color of the pixel
@@ -288,6 +314,26 @@ function updateBrushColor (type, val) {
 	ctx.fillStyle = brushColor.fill;
 }
 
+function getClickedColor (x, y) {
+	let imageData = ctx.getImageData (0, 0, $canvas.width, $canvas.height);
+	let pixelData = imageData.data;
+	
+	let realPos = y * $canvas.width * 4 + x * 4;
+	
+	brushColor.r = pixelData[realPos];
+	brushColor.g = pixelData[realPos + 1];
+	brushColor.b = pixelData[realPos + 2];
+	
+	brushColor.fill = rgbToHex (brushColor.r, brushColor.g, brushColor.b);
+	
+	ctx.fillStyle = brushColor.fill;
+	
+	document.getElementById ("rgb_r").value = brushColor.r;
+	document.getElementById ("rgb_g").value = brushColor.g;
+	document.getElementById ("rgb_b").value = brushColor.b;
+	document.getElementById ("rgb_result").style.backgroundColor = brushColor.fill;
+}
+
 function mousePosUpdate (e) {
 	mousePos = {
 		x: e.pageX,
@@ -303,6 +349,8 @@ function eventLoop () {
 			working = true;
 			fill (mousePos);
 			setTimeout (() => working = false, 200);
+		} else if (toolContext === tools.eyedropper) {
+			getClickedColor (mousePos.x, mousePos.y);
 		}
 	}
 	
