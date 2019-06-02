@@ -36,8 +36,32 @@ window.onload = () => {
 	document.getElementById ("tool_brush").addEventListener ("click", () => toolContext = tools.brush);
 	document.getElementById ("tool_paintcan").addEventListener ("click", () => toolContext = tools.paintcan);
 	
+	document.querySelectorAll ("#color_saver .color_box").forEach (
+		v => v.addEventListener ("click", e => updateSavedColor (e))
+	);
+	
 	requestAnimationFrame (eventLoop);
 };
+
+function updateSavedColor (e) {
+	let $block = e.target;
+	
+	if ($block.classList.contains ("empty")) {
+		$block.classList = "color_box";
+		$block.style.backgroundColor = brushColor.fill;
+		$block.dataset.hex_ref = brushColor.fill;
+	} else {
+		brushColor.fill = $block.dataset.hex_ref;
+		ctx.fillStyle = brushColor.fill;
+		brushColor.r = parseInt (brushColor.fill.substr(1, 2), 16);
+		brushColor.g = parseInt (brushColor.fill.substr(3, 2), 16);
+		brushColor.b = parseInt (brushColor.fill.substr(5, 2), 16);
+		document.getElementById ("rgb_r").value = brushColor.r;
+		document.getElementById ("rgb_g").value = brushColor.g;
+		document.getElementById ("rgb_b").value = brushColor.b;
+		document.getElementById ("rgb_result").style.backgroundColor = brushColor.fill;
+	}
+}
 
 /**
  * Fills currently selected color over all pixels with the color of the pixel
