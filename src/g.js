@@ -1,3 +1,4 @@
+var $canvas = undefined;
 var ctx = undefined;
 var mousePos = {x : 9999, y : 9999};
 var mouseDown = false;
@@ -21,7 +22,8 @@ var working = false;
 var layerManager = new LayerManager (new LayerBuilder ());
 
 window.onload = () => {
-	ctx = document.getElementById ("canvas").getContext ("2d");
+	$canvas = document.getElementById ("canvas");
+	ctx = $canvas.getContext ("2d");
 	
 	clearCanvas ();
 	
@@ -48,10 +50,10 @@ window.onload = () => {
  * @param  {Object} mousePos mouse coordinates of fill click
  */
 function fill (mousePos) {
-	let imageData = ctx.getImageData (0, 0, 500, 500);
+	let imageData = ctx.getImageData (0, 0, $canvas.width, $canvas.height);
 	let pixelData = imageData.data;
 	
-	let oPos = mousePos.y * 2000 + mousePos.x * 4;
+	let oPos = mousePos.y * $canvas.width * 4 + mousePos.x * 4;
 	
 	let clickedPixel = {
 		dataPosition: oPos,
@@ -103,7 +105,7 @@ function fill (mousePos) {
 				// so we can go up further
 				
 				let currentPixel = {
-					dataPosition: expandOrigins[i].dataPosition - (500 * 4),
+					dataPosition: expandOrigins[i].dataPosition - ($canvas.width * 4),
 					gridPosition: {
 						x: expandOrigins[i].gridPosition.x,
 						y: expandOrigins[i].gridPosition.y - 1
@@ -136,12 +138,12 @@ function fill (mousePos) {
 			}
 			
 			// Down
-			if (expandOrigins[i].gridPosition.y < 499) {
-				// If grid position is less than 499, we are NOT on the bottom
-				// row so we can go down further
+			if (expandOrigins[i].gridPosition.y < $canvas.height - 1) {
+				// If grid position is less than height - 1, we are NOT on the
+				// bottom row so we can go down further
 				
 				let currentPixel = {
-					dataPosition: expandOrigins[i].dataPosition + (500 * 4),
+					dataPosition: expandOrigins[i].dataPosition + ($canvas.width * 4),
 					gridPosition: {
 						x: expandOrigins[i].gridPosition.x,
 						y: expandOrigins[i].gridPosition.y + 1
@@ -212,9 +214,9 @@ function fill (mousePos) {
 			}
 			
 			// Right
-			if (expandOrigins[i].gridPosition.x < 499) {
-				// If grid position is less than 499, we are NOT on the rightmost
-				// column so we can go right further
+			if (expandOrigins[i].gridPosition.x < $canvas.width - 1) {
+				// If grid position is less than width - 1, we are NOT on the
+				// rightmost column so we can go right further
 				
 				let currentPixel = {
 					dataPosition: expandOrigins[i].dataPosition + 4,
@@ -294,7 +296,7 @@ function mousePosUpdate (e) {
 }
 
 function eventLoop () {
-	if (mouseDown === true && mousePos.x <= 500 && mousePos.y <= 500) {
+	if (mouseDown === true && mousePos.x <= $canvas.width && mousePos.y <= $canvas.height) {
 		if (toolContext === tools.brush) {
 			ctx.fillRect (mousePos.x, mousePos.y, brushSize, brushSize);
 		} else if (toolContext === tools.paintcan && working === false) {
@@ -309,6 +311,6 @@ function eventLoop () {
 
 function clearCanvas () {
 	ctx.fillStyle = "#000";
-	ctx.fillRect (0, 0, 500, 500);
+	ctx.fillRect (0, 0, $canvas.width, $canvas.height);
 	ctx.fillStyle = brushColor.fill;
 }
