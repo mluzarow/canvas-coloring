@@ -70,6 +70,7 @@ function updateSavedColor (e) {
 	} else {
 		brushColor.fill = $block.dataset.hex_ref;
 		ctx.fillStyle = brushColor.fill;
+		ctx.strokeStyle = brushColor.fill;
 		brushColor.r = parseInt (brushColor.fill.substr(1, 2), 16);
 		brushColor.g = parseInt (brushColor.fill.substr(3, 2), 16);
 		brushColor.b = parseInt (brushColor.fill.substr(5, 2), 16);
