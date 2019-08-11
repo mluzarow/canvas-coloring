@@ -1,6 +1,7 @@
 var $canvas = undefined;
 var ctx = undefined;
 var mousePos = {x : 9999, y : 9999};
+var lastPixelTouched = undefined;
 var mouseDown = false;
 var brushSize = 5;
 var brushColor = {
@@ -29,8 +30,8 @@ window.onload = () => {
 	document.getElementById ("clear").addEventListener ("click", clearCanvas);
 	document.getElementById ("brush_size").addEventListener ("change", e => brushSize = parseInt (e.target.value))
 	document.addEventListener ("mousemove", mousePosUpdate);
-	document.addEventListener ("mousedown", () => mouseDown = true);
-	document.addEventListener ("mouseup", () => mouseDown = false);
+	document.addEventListener ("mousedown", handlerMouseDown);
+	document.addEventListener ("mouseup", handlerMouseUp);
 	document.getElementById ("rgb_r").addEventListener ("change", e => updateBrushColor ('r', parseInt (e.target.value)));
 	document.getElementById ("rgb_g").addEventListener ("change", e => updateBrushColor ('g', parseInt (e.target.value)));
 	document.getElementById ("rgb_b").addEventListener ("change", e => updateBrushColor ('b', parseInt (e.target.value)));
@@ -44,6 +45,20 @@ window.onload = () => {
 	
 	requestAnimationFrame (eventLoop);
 };
+
+function handlerMouseDown() {
+	mouseDown = true;
+	lastPixelTouched = {
+		x: mousePos.x,
+		y: mousePos.y
+	};
+}
+
+function handlerMouseUp() {
+	mouseDown = false;
+	lastPixelTouched = undefined;
+}
+
 
 function updateSavedColor (e) {
 	let $block = e.target;
@@ -308,6 +323,7 @@ function updateBrushColor (type, val) {
 	document.getElementById ("rgb_result").style.backgroundColor = brushColor.fill;
 	
 	ctx.fillStyle = brushColor.fill;
+	ctx.strokeStyle = brushColor.fill;
 }
 
 function getClickedColor (x, y) {
@@ -323,6 +339,7 @@ function getClickedColor (x, y) {
 	brushColor.fill = rgbToHex (brushColor.r, brushColor.g, brushColor.b);
 	
 	ctx.fillStyle = brushColor.fill;
+	ctx.strokeStyle = brushColor.fill;
 	
 	document.getElementById ("rgb_r").value = brushColor.r;
 	document.getElementById ("rgb_g").value = brushColor.g;
@@ -331,6 +348,11 @@ function getClickedColor (x, y) {
 }
 
 function mousePosUpdate (e) {
+	lastPixelTouched = {
+		x: mousePos.x,
+		y: mousePos.y
+	};
+	
 	mousePos = {
 		x: e.pageX,
 		y: e.pageY
@@ -340,7 +362,12 @@ function mousePosUpdate (e) {
 function eventLoop () {
 	if (mouseDown === true && mousePos.x <= $canvas.width && mousePos.y <= $canvas.height) {
 		if (toolContext === tools.brush) {
-			ctx.fillRect (mousePos.x, mousePos.y, brushSize, brushSize);
+			ctx.beginPath();
+			ctx.moveTo(lastPixelTouched.x, lastPixelTouched.y);
+			ctx.lineTo(mousePos.x, mousePos.y);
+			ctx.lineWidth = brushSize;
+			ctx.stroke();
+			// ctx.fillRect (mousePos.x, mousePos.y, brushSize, brushSize);
 		} else if (toolContext === tools.paintcan && working === false) {
 			working = true;
 			fill (mousePos);
@@ -357,4 +384,5 @@ function clearCanvas () {
 	ctx.fillStyle = "#000";
 	ctx.fillRect (0, 0, $canvas.width, $canvas.height);
 	ctx.fillStyle = brushColor.fill;
+	ctx.strokeStyle = brushColor.fill;
 }
