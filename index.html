@@ -4,9 +4,22 @@
 	<script type = "text/javascript" src = "src/g.js"></script>
 	<title>a</title>
 	<style>
+		body {
+			margin: 0;
+			background-color: #f6f6f6;
+			overflow: hidden;
+		}
+		
+		canvas {
+			display: inline-block;
+		}
+		
 		.control_junk {
+			padding: 0.5em;
+			width: 40%;
 			display: inline-block;
 			vertical-align: top;
+			box-sizing: border-box;
 		}
 		
 		#rgb_result {
@@ -39,8 +52,8 @@
 	</style>
 </head>
 <body>
-	<canvas id="canvas" width=500 height=500></canvas>
-	<div class="control_junk">
+	<canvas id="canvas" width=500 height=500></canvas><!--
+	--><div class="control_junk">
 		<button id="clear">Clear canvas</button>
 		<div id="tool_type">
 			<div class="tool">

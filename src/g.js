@@ -23,6 +23,8 @@ var working = false;
 
 window.onload = () => {
 	$canvas = document.getElementById ("canvas");
+	$canvas.width = window.innerWidth * 0.6;
+	$canvas.height = window.innerHeight > $canvas.width ? $canvas.width : window.innerHeight;
 	ctx = $canvas.getContext ("2d");
 	
 	clearCanvas ();
@@ -368,7 +370,10 @@ function eventLoop () {
 			ctx.lineTo(mousePos.x, mousePos.y);
 			ctx.lineWidth = brushSize;
 			ctx.stroke();
-			// ctx.fillRect (mousePos.x, mousePos.y, brushSize, brushSize);
+			
+			let a = new Path2D();
+			a.arc(mousePos.x, mousePos.y, brushSize / 2, 0, 2 * Math.PI);
+			ctx.fill(a);
 		} else if (toolContext === tools.paintcan && working === false) {
 			working = true;
 			fill (mousePos);
